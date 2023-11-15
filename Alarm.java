@@ -1,9 +1,9 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import javax.sound.sampled.*;
 
 public class Alarm {
     private JFrame frame;
@@ -46,7 +46,7 @@ public class Alarm {
 
         frame.add(panel);
         frame.setSize(300, 100);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
         frame.setVisible(true);
     }
 
@@ -83,24 +83,54 @@ public class Alarm {
     private void startAlarm() {
         new Thread(new Runnable() {
             public void run() {
-                while (alarmOn) {
-                    LocalTime currentTime = LocalTime.now();
-                    if (currentTime.getHour() == alarmTime.getHour() &&
-                            currentTime.getMinute() == alarmTime.getMinute()) {
-                        System.out.print("Wake up!");
-                        alarmOn = false;
-                        onOffButton.setText("Turn On");
+                try {
+                    Clip clip = AudioSystem.getClip();
+                    AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+                            getClass().getResourceAsStream("alarm.wav"));
+                    clip.open(inputStream);
+    
+                    while (alarmOn) {
+                        LocalTime currentTime = LocalTime.now();
+                        if (currentTime.getHour() == alarmTime.getHour() &&
+                                currentTime.getMinute() == alarmTime.getMinute()) {
+                            SwingUtilities.invokeLater(new Runnable() {
+                                public void run() {
+                                    int option = JOptionPane.showOptionDialog(
+                                            frame,
+                                            "Wake Up!",
+                                            "Alarm",
+                                            JOptionPane.DEFAULT_OPTION,
+                                            JOptionPane.INFORMATION_MESSAGE,
+                                            null,
+                                            new Object[]{"Stop Alarm"},
+                                            "Stop Alarm");
+    
+                                    if (option == 0) {
+                                        alarmOn = false;
+                                        onOffButton.setText("Turn On");
+                                        clip.stop();  
+                                    }
+                                }
+                            });
+    
+                            clip.loop(Clip.LOOP_CONTINUOUSLY);  
+                        }
+    
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+    
+                    clip.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
     }
-
+    
     public static void main(String[] args) {
         new Alarm();
     }
