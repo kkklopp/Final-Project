@@ -14,6 +14,7 @@ public class Alarm {
     private JTextField minuteField;
     private boolean alarmOn = false;
     private LocalTime alarmTime;
+    public int AlertCount = 0; 
 
     public Alarm() {
         frame = new JFrame("Alarm Clock");
@@ -88,11 +89,12 @@ public class Alarm {
                     AudioInputStream inputStream = AudioSystem.getAudioInputStream(
                             getClass().getResourceAsStream("alarm.wav"));
                     clip.open(inputStream);
-    
                     while (alarmOn) {
                         LocalTime currentTime = LocalTime.now();
                         if (currentTime.getHour() == alarmTime.getHour() &&
                                 currentTime.getMinute() == alarmTime.getMinute()) {
+                            AlertCount = AlertCount + 1;
+                            if (AlertCount <= 1){
                             SwingUtilities.invokeLater(new Runnable() {
                                 public void run() {
                                     int option = JOptionPane.showOptionDialog(
@@ -111,9 +113,9 @@ public class Alarm {
                                         clip.stop();  
                                     }
                                 }
-                            });
+                                });
     
-                            clip.loop(Clip.LOOP_CONTINUOUSLY);  
+                            clip.loop(Clip.LOOP_CONTINUOUSLY);  };
                         }
     
                         try {
