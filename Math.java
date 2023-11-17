@@ -58,6 +58,23 @@ public class Math extends JPanel{
 
     }
 
+    public String take_input(){
+        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+        System.out.println("Enter answer");
+
+        String answer = myObj.nextLine();
+        return answer;
+    }
+
+    public boolean check_answer(int answer){
+        
+        if (answer == this.product()){
+            return true;
+        }
+        return false;
+    }
+
+
     @Override
 
     public void paintComponent(Graphics g) {
@@ -67,6 +84,8 @@ public class Math extends JPanel{
         g.drawString(Integer.toString(randomNumsArray[0]), 230, 350);
         g.drawString("X", 490, 350);
         g.drawString(Integer.toString(randomNumsArray[1]), 750, 350);
+        String answer = take_input();
+        System.out.println(check_answer((int)answer));
 
     }
 
