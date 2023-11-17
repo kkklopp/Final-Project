@@ -1,3 +1,4 @@
+import java.util.Scanner;
 import java.util.random;
 
 import javax.swing.JPanel;
@@ -10,9 +11,11 @@ public class Math extends JPanel{
     public static final int HEIGHT = 700;
     public static final int FPS = 60;
     String operation = "";
+    Math mathWorld;
    
     //array of random numbers
     int[] randomNumsArray;
+    boolean check = true;
     
  
     public Math(int n){ // pass in the number of diffenent arguments you want when calling the math class(like 1+1 is 2 arguments, while 1+1+1 is 3) 
@@ -67,13 +70,36 @@ public class Math extends JPanel{
     }
 
     public boolean check_answer(int answer){
+    
         
         if (answer == this.product()){
-            return true;
+            check = false;
+            return check;
         }
-        return false;
+        return check;
     }
 
+    class Runner implements Runnable{
+        public Runner()
+        {
+            
+        }
+        public void run()
+        {
+            while(check){
+
+                mathWorld = new Math(2);
+                Math.updateWorld(1.0 / (double)FPS);
+                repaint();
+                try{
+                    Thread.sleep(1000/FPS);
+                }
+                catch(InterruptedException e){}
+            }
+            
+        }    
+
+    }
 
     @Override
 
@@ -85,7 +111,7 @@ public class Math extends JPanel{
         g.drawString("X", 490, 350);
         g.drawString(Integer.toString(randomNumsArray[1]), 750, 350);
         String answer = take_input();
-        System.out.println(check_answer((int)answer));
+        check_answer((int)answer);
 
     }
 
