@@ -1,7 +1,14 @@
 import java.util.random;
+
+import javax.swing.JPanel;
+
 import java.lang;
 
-public class Math{
+public class Math extends JPanel{
+
+    public static final int WIDTH = 900;
+    public static final int HEIGHT = 700;
+    public static final int FPS = 60;
     String operation = "";
    
     //array of random numbers
@@ -48,6 +55,18 @@ public class Math{
             product+= randomNumsArray[i];
         }
         return product;
+
+    }
+
+    @Override
+
+    public void paintComponent(Graphics g) {
+        Font font = new Font(Font.MONOSPACED, Font.BOLD, 50);
+        g.setColor(Color.ORANGE);
+        g.setFont(font);
+        g.drawString(Integer.toString(randomNumsArray[0]), 230, 350);
+        g.drawString("X", 490, 350);
+        g.drawString(Integer.toString(randomNumsArray[1]), 750, 350);
 
     }
 
