@@ -1,4 +1,4 @@
-package alarm;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +15,7 @@ public class Alarm {
     private JTextField minuteField;
     private boolean alarmOn = false;
     private LocalTime alarmTime;
-    public int AlertCount = 0; 
+    public int alertCount = 0; 
 
     public Alarm() {
         frame = new JFrame("Alarm Clock");
@@ -94,8 +94,8 @@ public class Alarm {
                         LocalTime currentTime = LocalTime.now();
                         if (currentTime.getHour() == alarmTime.getHour() &&
                                 currentTime.getMinute() == alarmTime.getMinute()) {
-                            AlertCount = AlertCount + 1;
-                            if (AlertCount <= 1){
+                            alertCount = alertCount + 1;
+                            if (alertCount <= 1){
                             SwingUtilities.invokeLater(new Runnable() {
                                 public void run() {
                                     int option = JOptionPane.showOptionDialog(
