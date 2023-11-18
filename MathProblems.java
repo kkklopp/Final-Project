@@ -1,119 +1,106 @@
-import java.util.Scanner;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
 
-public class MathProblems extends JPanel{
+public class MathProblems extends JPanel {
     public static final int WIDTH = 900;
     public static final int HEIGHT = 700;
     public static final int FPS = 60;
-    String operation = "";
-    MathProblems mathWorld;
-    Thread mathThread;
-   
-    //array of random numbers
-    int[] randomNumsArray;
-    boolean check = true;
-    
- 
-    public MathProblems(int n){ // pass in the number of diffenent arguments you want when calling the math class(like 1+1 is 2 arguments, while 1+1+1 is 3)
+
+    private int[] randomNumsArray;
+    private boolean mathProblemDisplayed = false;
+    private Timer timer;
+    private Alarm alarmInstance;
+
+    public MathProblems(int n, Alarm alarmInstance) {
         randomNumsArray = new int[n];
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         generateRandom();
-        mathThread = new Thread(new MathProblems.Runner());
-        mathThread.start();
-    }
+        this.alarmInstance = alarmInstance;
 
-    class Runner implements Runnable{
-        @Override
-        public void run()
-        {
-            while(check){
-                System.out.print("Hello check");
-                mathWorld = new MathProblems(2);
-                //MathProblems.updateWorld(1.0 / (double)FPS);
-                repaint();
-                try{
-                    Thread.sleep(1000/FPS);
+        timer = new Timer(1000 / FPS, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!mathProblemDisplayed) {
+                    displayMathProblem();
                 }
-                catch(InterruptedException e){}
             }
-
-        }
-
+        });
+        timer.start();
     }
 
-
-    //store the random numbers in an array
-    public void generateRandom(){
-        for (int i = 0; i< randomNumsArray.length; i++){
-            randomNumsArray[i] = (int) Math.random()*100;
+    public void generateRandom() {
+        Random rand = new Random();
+        for (int i = 0; i < randomNumsArray.length; i++) {
+            randomNumsArray[i] = rand.nextInt(100);
         }
-
     }
 
-    //gives the sum of all the random nums in the array
-    public int add(){
-        int total = 0;
-        for (int i = 0; i< randomNumsArray.length; i++){
-            total+= randomNumsArray[i];
-        }
-        return total;
-    }
-
-    //does 1st num - 2nd num - 3rd num - 4th num and so on..
-    public int subtract(){
-        int difference = randomNumsArray[0];
-        for (int i = 1; i< randomNumsArray.length; i++){
-            difference-= randomNumsArray[i];
-        }
-        return difference;
-
-    }
-
-    //gives the product of all the random nums in the array
-    public int multiply(){
+    public int multiply() {
         int product = 1;
-        for (int i = 0; i< randomNumsArray.length; i++){
-            product+= randomNumsArray[i];
+        for (int i = 0; i < randomNumsArray.length; i++) {
+            product *= randomNumsArray[i];
         }
         return product;
-
     }
 
-    public String take_input(){
-        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
-        System.out.println("Enter answer");
-
-        String answer = myObj.nextLine();
-        return answer;
-    }
-
-    public boolean check_answer(int answer){
-    
-        
-        if (answer == this.multiply()){
-            check = false;
-            return check;
+    public boolean check_answer(int answer) {
+        if (answer == this.multiply()) {
+            alarmInstance.stopAlarm();
+            return true;
         }
-        return check;
+        return false;
+    }
+
+    public void displayMathProblem() {
+        mathProblemDisplayed = true;
+        repaint();
+
+        String answer = JOptionPane.showInputDialog("Enter the product of the numbers:");
+        if (answer != null) {
+            try {
+                int userAnswer = Integer.parseInt(answer);
+                if (check_answer(userAnswer)) {
+                    mathProblemDisplayed = false;
+                } else {
+                    JOptionPane.showMessageDialog(this, "Incorrect answer. Try again.");
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Invalid input. Please enter a number.");
+            }
+        }
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.BLACK);
-        g.fillRect(0,0,WIDTH,HEIGHT);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
         Font font = new Font(Font.MONOSPACED, Font.BOLD, 50);
         g.setColor(Color.ORANGE);
         g.setFont(font);
         g.drawString(Integer.toString(randomNumsArray[0]), 230, 350);
         g.drawString("X", 490, 350);
         g.drawString(Integer.toString(randomNumsArray[1]), 750, 350);
-        String answer = take_input();
-        check_answer(Integer.valueOf(answer));
-
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame frame = new JFrame("Math Problems");
+                Alarm alarm = new Alarm(); 
+                MathProblems mathProblems = new MathProblems(2, alarm);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.getContentPane().add(mathProblems);
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+    }
 }
