@@ -1,7 +1,7 @@
 import javax.swing.*;
 
-public class DisplayMath {
-    public DisplayMath() {
+public class Main {
+    public Main() {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Math Problems!");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -18,6 +18,6 @@ public class DisplayMath {
     }
 
     public static void main(String[] args) {
-        new DisplayMath();
+        new Main();
     }
 }
