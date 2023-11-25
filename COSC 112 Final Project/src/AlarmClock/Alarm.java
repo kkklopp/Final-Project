@@ -1,11 +1,21 @@
+<<<<<<< HEAD:Alarm.java
+=======
+package AlarmClock;
+
+>>>>>>> main:COSC 112 Final Project/src/AlarmClock/Alarm.java
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import javax.sound.sampled.*;
+import MathTest.*;
+
 
 public class Alarm {
+    private int width;
+    private int height;
+    private int fps;
     private JFrame frame;
     private JPanel panel;
     private JButton setButton;
@@ -14,10 +24,19 @@ public class Alarm {
     private JTextField minuteField;
     private boolean alarmOn = false;
     private LocalTime alarmTime;
+<<<<<<< HEAD:Alarm.java
     public int alertCount = 0;
     private Clip clip;
+=======
+    public int AlertCount = 0;
+    boolean gameComplete = false;
+    static DisplayMathScreen mathProblem;
+>>>>>>> main:COSC 112 Final Project/src/AlarmClock/Alarm.java
 
-    public Alarm() {
+    public Alarm(int initWidth, int initHeight, int initFPS) {
+        width = initWidth;
+        height = initHeight;
+        fps = initFPS;
         frame = new JFrame("Alarm Clock");
         panel = new JPanel();
         setButton = new JButton("Set Alarm");
@@ -70,9 +89,8 @@ public class Alarm {
     private void manageAlarm() {
         if (alarmTime != null) {
             alarmOn = !alarmOn;
-            onOffButton.setText(alarmOn ? "Turn Off" : "Turn On");
+            //onOffButton.setText(alarmOn ? "Turn Off" : "Turn On");
             if (alarmOn) {
-                System.out.println("Alarm ON");
                 startAlarm();
             } else {
                 System.out.println("Alarm OFF");
@@ -88,12 +106,13 @@ public class Alarm {
                 try {
                     clip = AudioSystem.getClip();
                     AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-                            getClass().getResourceAsStream("alarm.wav"));
+                            getClass().getResourceAsStream("sound/alarm.wav"));
                     clip.open(inputStream);
                     while (alarmOn) {
                         LocalTime currentTime = LocalTime.now();
                         if (currentTime.getHour() == alarmTime.getHour() &&
                                 currentTime.getMinute() == alarmTime.getMinute()) {
+<<<<<<< HEAD:Alarm.java
                             alertCount = alertCount + 1;
                             if (alertCount <= 1) {
                                 SwingUtilities.invokeLater(new Runnable() {
@@ -112,17 +131,41 @@ public class Alarm {
                                             stopAlarm();
                                         }
                                     }
+=======
+                            AlertCount = AlertCount + 1;
+                            if (AlertCount <= 1){
+                            SwingUtilities.invokeLater(new Runnable() {
+                                public void run() {
+                                    int option = JOptionPane.showOptionDialog(
+                                            frame,
+                                            "Wake Up!",
+                                            "Alarm",
+                                            JOptionPane.DEFAULT_OPTION,
+                                            JOptionPane.INFORMATION_MESSAGE,
+                                            null,
+                                            new Object[]{"Play to Stop!"},
+                                            "Play to Stop!");
+
+                                    stopAlarm(clip);
+                                }
+>>>>>>> main:COSC 112 Final Project/src/AlarmClock/Alarm.java
                                 });
 
                                 clip.loop(Clip.LOOP_CONTINUOUSLY);
                             }
                         }
 
+<<<<<<< HEAD:Alarm.java
+=======
+/*
+>>>>>>> main:COSC 112 Final Project/src/AlarmClock/Alarm.java
                         try {
-                            Thread.sleep(1000);
+                            Thread.sleep(500);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+
+ */
                     }
 
                     clip.close();
@@ -133,6 +176,7 @@ public class Alarm {
         }).start();
     }
 
+<<<<<<< HEAD:Alarm.java
     public void stopAlarm() {
         alarmOn = false;
         onOffButton.setText("Turn On");
@@ -141,5 +185,14 @@ public class Alarm {
 
     public static void main(String[] args) {
         new Alarm();
+=======
+    private void stopAlarm(Clip sound) {
+        mathProblem = new DisplayMathScreen(width,height,fps);
+        if(mathProblem.mathInstance.complete) {
+            alarmOn = false;
+            onOffButton.setText("Turn On");
+            sound.stop();
+        }
+>>>>>>> main:COSC 112 Final Project/src/AlarmClock/Alarm.java
     }
 }
