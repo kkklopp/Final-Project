@@ -3,13 +3,12 @@ import javax.swing.*;
 public class Main {
     public Main() {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Math Problems!");
+            JFrame frame = new JFrame("Alarm");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            
-            Alarm alarmInstance = new Alarm();
-            MathProblems mathProblems = new MathProblems(2, alarmInstance);
 
-            frame.setContentPane(mathProblems);
+            Alarm alarm = new Alarm();
+
+            frame.setContentPane(alarm.getPanel());
             frame.setResizable(false);
             frame.pack();
             frame.setVisible(true);

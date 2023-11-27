@@ -12,21 +12,19 @@ public class MathProblems extends JPanel {
     private int[] randomNumsArray;
     private boolean mathProblemDisplayed = false;
     private Timer timer;
-    private Alarm alarmInstance;
 
-    public MathProblems(int n, Alarm alarmInstance) {
+    public MathProblems(int n) {
         randomNumsArray = new int[n];
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         generateRandom();
-        this.alarmInstance = alarmInstance;
 
         timer = new Timer(1000 / FPS, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!mathProblemDisplayed) {
-                    displayMathProblem();
+                    // Removed displayMathProblem() from here
                 }
             }
         });
@@ -50,17 +48,22 @@ public class MathProblems extends JPanel {
 
     public boolean check_answer(int answer) {
         if (answer == this.multiply()) {
-            alarmInstance.stopAlarm();
             return true;
         }
         return false;
     }
 
-    public void displayMathProblem() {
-        mathProblemDisplayed = true;
+    public void runMathProblems() {
+        // This method is called from the Alarm class to initiate the math problems
+        mathProblemDisplayed = false;
+        displayMathProblem();
+    }
+
+    private void displayMathProblem() {
+        // This method displays the math problem
         repaint();
 
-        String answer = JOptionPane.showInputDialog("Enter the product of the numbers:");
+        String answer = JOptionPane.showInputDialog("Enter the solution to this problem: \n" + Integer.toString(randomNumsArray[0]) + "X" + Integer.toString(randomNumsArray[1]));
         if (answer != null) {
             try {
                 int userAnswer = Integer.parseInt(answer);
@@ -68,13 +71,30 @@ public class MathProblems extends JPanel {
                     mathProblemDisplayed = false;
                 } else {
                     JOptionPane.showMessageDialog(this, "Incorrect answer. Try again.");
+                    runMathProblems(); 
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Invalid input. Please enter a number.");
+                runMathProblems(); 
             }
         }
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame frame = new JFrame("Math Problems");
+                MathProblems mathProblems = new MathProblems(2);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.getContentPane().add(mathProblems);
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+        
+    }
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -86,21 +106,5 @@ public class MathProblems extends JPanel {
         g.drawString(Integer.toString(randomNumsArray[0]), 230, 350);
         g.drawString("X", 490, 350);
         g.drawString(Integer.toString(randomNumsArray[1]), 750, 350);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                JFrame frame = new JFrame("Math Problems");
-                Alarm alarm = new Alarm(); 
-                MathProblems mathProblems = new MathProblems(2, alarm);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.getContentPane().add(mathProblems);
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            }
-        });
     }
 }
