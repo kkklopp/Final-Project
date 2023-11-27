@@ -24,11 +24,6 @@ public class MathProblems extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!mathProblemDisplayed) {
-<<<<<<< HEAD
-                   
-=======
-                    // Removed displayMathProblem() from here
->>>>>>> main
                 }
             }
         });
@@ -58,16 +53,11 @@ public class MathProblems extends JPanel {
     }
 
     public void runMathProblems() {
-<<<<<<< HEAD
-=======
-        // This method is called from the Alarm class to initiate the math problems
->>>>>>> main
         mathProblemDisplayed = false;
         displayMathProblem();
     }
 
     private void displayMathProblem() {
-<<<<<<< HEAD
     repaint();
 
     boolean correctAnswer = false;
@@ -76,12 +66,6 @@ public class MathProblems extends JPanel {
         String answer = JOptionPane.showInputDialog("Enter the solution to this problem:\n" +
                 randomNumsArray[0] + " X " + randomNumsArray[1]);
         
-=======
-        // This method displays the math problem
-        repaint();
-
-        String answer = JOptionPane.showInputDialog("Enter the solution to this problem: \n" + Integer.toString(randomNumsArray[0]) + "X" + Integer.toString(randomNumsArray[1]));
->>>>>>> main
         if (answer != null) {
             try {
                 int userAnswer = Integer.parseInt(answer);
@@ -90,25 +74,17 @@ public class MathProblems extends JPanel {
                     mathProblemDisplayed = false;
                 } else {
                     JOptionPane.showMessageDialog(this, "Incorrect answer. Try again.");
-<<<<<<< HEAD
                     generateRandom(); 
-=======
-                    runMathProblems(); 
->>>>>>> main
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Invalid input. Please enter a number.");
-                runMathProblems(); 
             }
         } else {
             mathProblemDisplayed = false;
             correctAnswer = true; 
         }
     }
-<<<<<<< HEAD
 }
-=======
->>>>>>> main
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
