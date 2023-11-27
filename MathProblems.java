@@ -24,7 +24,7 @@ public class MathProblems extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!mathProblemDisplayed) {
-                    // Removed displayMathProblem() from here
+                   
                 }
             }
         });
@@ -54,31 +54,38 @@ public class MathProblems extends JPanel {
     }
 
     public void runMathProblems() {
-        // This method is called from the Alarm class to initiate the math problems
         mathProblemDisplayed = false;
         displayMathProblem();
     }
 
     private void displayMathProblem() {
-        // This method displays the math problem
-        repaint();
+    repaint();
 
-        String answer = JOptionPane.showInputDialog("Enter the solution to this problem: \n" + Integer.toString(randomNumsArray[0]) + "X" + Integer.toString(randomNumsArray[1]));
+    boolean correctAnswer = false;
+    
+    while (!correctAnswer) {
+        String answer = JOptionPane.showInputDialog("Enter the solution to this problem:\n" +
+                randomNumsArray[0] + " X " + randomNumsArray[1]);
+        
         if (answer != null) {
             try {
                 int userAnswer = Integer.parseInt(answer);
                 if (check_answer(userAnswer)) {
+                    correctAnswer = true;
                     mathProblemDisplayed = false;
                 } else {
                     JOptionPane.showMessageDialog(this, "Incorrect answer. Try again.");
-                    runMathProblems(); 
+                    generateRandom(); 
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Invalid input. Please enter a number.");
-                runMathProblems(); 
             }
+        } else {
+            mathProblemDisplayed = false;
+            correctAnswer = true; 
         }
     }
+}
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
