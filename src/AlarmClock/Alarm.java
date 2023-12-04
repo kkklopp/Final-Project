@@ -24,9 +24,12 @@ public class Alarm {
     private int numAlarms = 0;
     private boolean alarmOn = false;
     private LocalTime alarmTime;
+
+    private LocalTime currentTime;
     public int AlertCount = 0;
     boolean gameComplete = false;
     static DisplayMathScreen mathProblem;
+    Clip clip;
 
     public Alarm(int initWidth, int initHeight, int initFPS) {
         width = initWidth;
@@ -50,23 +53,23 @@ public class Alarm {
         setButton.setForeground(Color.BLACK);
 
         for (int i = 0; i < numAlarms; i++) {
+            final int index = i;
             alarmLabels[i] = new JLabel();
             alarmLabels[i].setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
             alarmLabels[i].setForeground(Color.WHITE);
             alarmLabels[i].setBounds(240, 420 + i * 20, 300, 20);
             panel.add(alarmLabels[i]);
 
-            alarmButtons[i] = new JButton("ON");
+            alarmButtons[i] = new JButton("OFF");
             alarmButtons[i].setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
             alarmButtons[i].setBounds(550, 420 + i * 20, 70, 20);
-            final int index = i;
+            panel.add(alarmButtons[i]);
             alarmButtons[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     toggleAlarm(index);
                 }
             });
-            panel.add(alarmButtons[i]);
         }
 
         JLabel label = new JLabel("SET ALARM (HH:MM):");
@@ -108,6 +111,7 @@ public class Alarm {
                 alarmTime = LocalTime.of(hour, minute);
                 if (!isAlarmAlreadySet(alarmTime)) {
                     setAlarms[numAlarms] = alarmTime;
+                    alarmTime = LocalTime.of(hour, minute);
                     numAlarms++;
 
                     for (int i = 0; i < numAlarms; i++) {
@@ -132,7 +136,7 @@ public class Alarm {
 
                     updateAlarmLabels();
                     updateAlarmButtons();
-                    System.out.println("Alarm set for " + alarmTime.format(DateTimeFormatter.ofPattern("HH:mm")));
+                    System.out.println("Alarm set for " + alarmTime);
                 } else {
                     JOptionPane.showMessageDialog(frame, "Alarm is already set for this time.");
                 }
@@ -167,14 +171,20 @@ public class Alarm {
     }
 
     private void toggleAlarm(int index) {
+        System.out.println(alarmTime);
+        System.out.println(setAlarms[numAlarms-1]);
+        alarmOn = !alarmOn;
         if (alarmOn) {
-            JOptionPane.showMessageDialog(frame, "Please turn off the current alarm before activating a new one.");
-            return;
+            currentTime = LocalTime.now();
+            currentTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+            System.out.println(currentTime);
+            if (alarmTime == setAlarms[numAlarms-1]){
+            startAlarm(index);} else { System.out.println("whyyy");}
+        } else {
+            System.out.println("Alarm OFF");
         }
-
-        alarmTime = setAlarms[index];
-        startAlarm(index);
     }
+
 
     private void startAlarm(int index) {
         new Thread(new Runnable() {
