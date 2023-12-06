@@ -20,16 +20,13 @@ import java.util.Scanner;
 import java.util.Set;
 import java.io.File; 
 import java.io.FileNotFoundException;
-import java.util.Random;  
-import java.util.Scanner;
 import java.util.*;
-import java.awt.Font;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 
-public class Wordle_3{
+public class DisplayWordleScreen {
     public static void main(String[] args){
         JFrame frame = new JFrame("Wordle!!!");
         

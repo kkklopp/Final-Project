@@ -8,6 +8,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import javax.sound.sampled.*;
 import MathTest.*;
+import Wordle.*;
+import clockGame.*;
 
 public class Alarm {
     private int width;
@@ -25,10 +27,16 @@ public class Alarm {
     private boolean alarmOn = false;
     private LocalTime alarmTime;
 
+    public String select;
+
     private LocalTime currentTime;
     public int AlertCount = 0;
     boolean gameComplete = false;
     static DisplayMathScreen mathProblem;
+
+    static DisplayGameScreen gameScreen;
+
+    static DisplayWordleScreen wordleScreen;
     Clip clip;
 
     public Alarm(int initWidth, int initHeight, int initFPS) {
@@ -96,6 +104,53 @@ public class Alarm {
         setButton.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
 
         panel.add(setButton);
+
+        f.setLayout(new FlowLayout());
+
+        // array of string containing cities
+        String s1[] = { "Math Game", "Wordle", "Flappy Alarm"};
+
+        // create checkbox
+        c1 = new JComboBox(s1);
+
+        // add ItemListener
+        c1.addItemListener(s);
+
+        // create labels
+        l = new JLabel("select the game that you want to play");
+        l1 = new JLabel("None Selected");
+
+        // set color of text
+        l.setForeground(Color.red);
+        l1.setForeground(Color.blue);
+
+        // create a new panel
+        JPanel p = new JPanel();
+
+        p.add(l);
+
+        // add combobox to panel
+        p.add(c1);
+
+        p.add(l1);
+
+        // add panel to frame
+        f.add(p);
+
+        // set the size of frame
+        f.setSize(400, 300);
+
+        f.show();
+    }
+    public void itemStateChanged(ItemEvent e)
+    {
+        // if the state combobox is changed
+        if (e.getSource() == c1) {
+            l1.setText(c1.getSelectedItem() + " selected");
+        }
+    }
+
+
 
         frame.add(panel);
         frame.setSize(900, 700);
@@ -228,11 +283,28 @@ public class Alarm {
     }
 
     private void stopAlarm(Clip sound, int index) {
+        if (select == "math") {
             mathProblem = new DisplayMathScreen(width, height, fps);
             if (mathProblem.mathInstance.complete) {
+            sound.stop();
+            alarmOn = false;
+            updateAlarmButtons();
+            }
+        } else if (select == "flappy") {
+            gameScreen = new DisplayGameScreen(width, height, fps, hammerGoal, highScore, frame);
+            if (gameScreen.gameInstance.ifGameComplete()) {
                 sound.stop();
                 alarmOn = false;
                 updateAlarmButtons();
+            }
+        } else if (select == "wordle") {
+            wordleScreen = new DisplayWordleScreen(width, height, fps);
+            if (wordleScreen.wordleInstance.ifWordleComplete()) {
+                sound.stop();
+                alarmOn = false;
+                updateAlarmButtons();
+            }
+        }
     }
 
     public static void main(String[] args) {
