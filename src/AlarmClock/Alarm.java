@@ -92,7 +92,7 @@ public class Alarm {
         minuteField.setFont(new Font(Font.MONOSPACED, Font.BOLD, 40));
         panel.add(minuteField);
 
-        setButton.setBounds(240, 350, 180, 60);
+        setButton.setBounds(340, 350, 180, 60);
         setButton.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
 
         panel.add(setButton);
@@ -172,18 +172,22 @@ public class Alarm {
 
     private void toggleAlarm(int index) {
         System.out.println(alarmTime);
-        System.out.println(setAlarms[numAlarms-1]);
+        System.out.println(setAlarms[numAlarms - 1]);
         alarmOn = !alarmOn;
         if (alarmOn) {
             currentTime = LocalTime.now();
             currentTime.format(DateTimeFormatter.ofPattern("HH:mm"));
             System.out.println(currentTime);
-            if (alarmTime == setAlarms[numAlarms-1]){
-            startAlarm(index);} else { System.out.println("whyyy");}
+            if (alarmTime.equals(setAlarms[numAlarms - 1])) {
+                startAlarm(index);
+            } else {
+                System.out.println("whyyy");
+            }
         } else {
             System.out.println("Alarm OFF");
         }
     }
+
 
 
     private void startAlarm(int index) {
@@ -224,12 +228,11 @@ public class Alarm {
     }
 
     private void stopAlarm(Clip sound, int index) {
-        mathProblem = new DisplayMathScreen(width, height, fps);
-        if (mathProblem.mathInstance.complete) {
-            sound.stop();
-            alarmOn = false;
-            updateAlarmButtons();
-        }
+            mathProblem = new DisplayMathScreen(width, height, fps);
+            if (mathProblem.mathInstance.complete) {
+                sound.stop();
+                alarmOn = false;
+                updateAlarmButtons();
     }
 
     public static void main(String[] args) {
