@@ -3,7 +3,7 @@ package clockGame;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class ClockBackground extends Object{
+public class ClockBackground extends Obj{
     private BufferedImage background;
     private static double defaultWidth = 1244;
 

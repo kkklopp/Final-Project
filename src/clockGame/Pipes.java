@@ -3,7 +3,7 @@ package clockGame;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Pipes extends Object {
+public class Pipes extends Obj {
     private double maxTopHeight;
     private double ranTopYposition;
     private double ranBottomYposition;

@@ -5,7 +5,7 @@ import Timers.Timer;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class GamePlayer extends Object {
+public class GamePlayer extends Obj {
     private BufferedImage[] wingDirection = new BufferedImage[2];
     private BufferedImage otherClock;
     private BufferedImage screenClock;

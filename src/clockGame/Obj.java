@@ -2,14 +2,14 @@ package clockGame;
 
 import java.awt.*;
 
-public abstract class Object {
+public abstract class Obj {
     Pair position;
     Pair velocity;
     Pair acceleration;
     double height;
     double width;
 
-    public Object() {
+    public Obj() {
     }
 
     public abstract void draw(Graphics g);

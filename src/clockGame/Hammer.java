@@ -2,7 +2,7 @@ package clockGame;
 
 import java.awt.*;
 
-public class Hammer extends Object {
+public class Hammer extends Obj {
     private int defaultYVelocity = 300;
 
     public Hammer(double x, double y, double velocityX) {

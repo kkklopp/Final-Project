@@ -24,9 +24,21 @@ public class MathWorld {
         }
     }
 
-    public void checkAnswer(int answer){
+    public void checkAnswer(int answer, String sign){
     //switch for each option +, -, *
-        correct = (answer == CalculateMath.add(randomNumsArray));
+        switch (sign){
+            case "+":
+                correct = (answer == CalculateMath.add(randomNumsArray));
+                break;
+
+            case "-":
+                correct = (answer == CalculateMath.subtract(randomNumsArray));
+                break;
+
+            case "X":
+                correct = (answer == CalculateMath.multiply(randomNumsArray));
+        }
+
     }
     public void displayMathProblem(Graphics g, String sign) {
         //switch for if add, if multiply, if subtract, then display + or - or * instead
@@ -41,7 +53,22 @@ public class MathWorld {
             }
             displayProblem = displayProblem.concat(Integer.toString(randomNumsArray[i])) + " "+sign+" ";
         }
-        g.drawString(displayProblem, 350, 200);
+
+        switch (randomNumsArray.length){
+            case 2:
+                g.drawString(displayProblem, 350, 200);
+                break;
+            case 3:
+                g.drawString(displayProblem, 300, 200);
+                break;
+            case 4:
+                g.drawString(displayProblem, 250, 200);
+                break;
+            default:
+                break;
+        }
+
+
     }
 
     public int [] getRanNumsArray() {

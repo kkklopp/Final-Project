@@ -2,6 +2,7 @@ package MathTest;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.lang.Math;
 
 public class MathScreen extends JPanel implements KeyListener {
 
@@ -10,13 +11,14 @@ public class MathScreen extends JPanel implements KeyListener {
     int width;
     int height;
     int fps;
-    String mathSign = "+";
+    String mathSign;
     String userAnswer = "";
     boolean guessed = false;
     int correctCount = 0;  // Counter for correct answers
     public boolean complete = false;
     int argNum;
     int[] storeProblem;
+    int random = (int)(Math.random()*3) + 1;
     JLabel submitLabel;  // Change from JButton to JLabel
 
     public MathScreen(int initArg, int initWidth, int initHeight, int initFPS) {
@@ -37,10 +39,10 @@ public class MathScreen extends JPanel implements KeyListener {
         submitLabel.setForeground(Color.WHITE);
         submitLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 50));
         submitLabel.addMouseListener(new MouseAdapter() {
-            @Override
+            @Override 
             public void mouseClicked(MouseEvent e) {
                 if (!userAnswer.equals("")) {
-                    mathWorld.checkAnswer(Integer.parseInt(userAnswer));
+                    mathWorld.checkAnswer(Integer.parseInt(userAnswer), mathSign);
                     guessed = true;
                     if (mathWorld.correct) {
                         correctCount++;
@@ -61,6 +63,9 @@ public class MathScreen extends JPanel implements KeyListener {
         submitLabel.setBounds(360, 400, 200, 70);
         this.setLayout(null);
         this.add(submitLabel);
+        System.out.println(random);
+
+        mathSign = "X";
     }
 
     class Runner implements Runnable {
@@ -118,18 +123,42 @@ public class MathScreen extends JPanel implements KeyListener {
 
         if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getSource() == submitLabel) {
             if (!userAnswer.equals("")) {
-                mathWorld.checkAnswer(Integer.parseInt(userAnswer));
+                mathWorld.checkAnswer(Integer.parseInt(userAnswer), mathSign);
                 guessed = true;
                 if (mathWorld.correct) {
+
                     correctCount++;
+
                     if (correctCount >= 3) {
                         complete = true;
                         System.out.println("Alarm stopped!");
                     } else {
                         // Reset state and generate a new problem
+
+
+                        random = (int)(Math.random()*2) + 1;
+                        switch (random) {
+                            case 1:
+                                mathSign = "+";
+                                break;
+
+                            case 2:
+                                mathSign = "-";
+                                break;
+                        }
+
+                        if (correctCount == 1){
+                            argNum = 3;
+
+                        }
+                        else if (correctCount == 2){
+                            argNum = 4;
+                        }
+
                         mathWorld = new MathWorld(argNum);
                         guessed = false;
                         userAnswer = "";
+
                     }
                 }
             }
@@ -171,3 +200,6 @@ public class MathScreen extends JPanel implements KeyListener {
         requestFocus();
     }
 }
+
+
+
