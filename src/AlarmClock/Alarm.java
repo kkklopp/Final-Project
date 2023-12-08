@@ -102,7 +102,7 @@ public class Alarm {
         panel.add(setButton);
         panel.add(onOffButton);
 
-        String[] gameOptions = {"Math Questions", "Flappy Clock", "Wordle"};
+        String[] gameOptions = {"Choose Method", "Math Questions", "Flappy Clock", "Wordle"};
         selectComboBox = new JComboBox<>(gameOptions);
         selectComboBox.setBounds(340, 300, 180, 30);
         panel.add(selectComboBox);
@@ -121,6 +121,7 @@ public class Alarm {
             if (hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59) {
                 if (!isAlarmAlreadySet(alarmTime)) {
                     alarmTime = LocalTime.of(hour, minute);
+                    select = (String) selectComboBox.getSelectedItem();
                     System.out.println("Alarm set for " + alarmTime.format(DateTimeFormatter.ofPattern("HH:mm")));
                 } else {
                     JOptionPane.showMessageDialog(frame, "Alarm is already set for this time.");
@@ -158,45 +159,51 @@ public class Alarm {
     }
 
 
-
     private void startAlarm() {
         new Thread(new Runnable() {
             public void run() {
-                try {
-                    Clip clip = AudioSystem.getClip();
-                    AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-                            getClass().getResourceAsStream("sound/alarm.wav"));
-                    clip.open(inputStream);
-                    AlertCount = AlertCount + 1;
-                    if (AlertCount <= 1) {
+            try {
+                Clip clip = AudioSystem.getClip();
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+                        getClass().getResourceAsStream("sound/alarm.wav"));
+                clip.open(inputStream);
+                if (AlertCount <= 1) {
+                    LocalTime currentTime = LocalTime.now();
+                    if (currentTime.getHour() == alarmTime.getHour() &&
+                            currentTime.getMinute() == alarmTime.getMinute()) {
                         SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                int option = JOptionPane.showOptionDialog(
-                                        frame,
-                                        "Wake Up!",
-                                        "Alarm",
-                                        JOptionPane.DEFAULT_OPTION,
-                                        JOptionPane.INFORMATION_MESSAGE,
-                                        null,
-                                        new Object[]{"Play to Stop!"},
-                                        "Play to Stop!");
+                                                       public void run() {
+                                                           int option = JOptionPane.showOptionDialog(
+                                                                   panel,
+                                                                   "Wake Up!",
+                                                                   "Alarm",
+                                                                   JOptionPane.DEFAULT_OPTION,
+                                                                   JOptionPane.INFORMATION_MESSAGE,
+                                                                   null,
+                                                                   new Object[]{"Play to Stop!"},
+                                                                   "Play to Stop!");
 
-                                stopAlarm(clip);
-                            }
-                        });
+                                                           if (option == 0) {
+                                                               stopAlarm(clip);
+                                                               System.out.println("option");
+                                                           }
+                                                       }
+                                                   });
 
                         clip.loop(Clip.LOOP_CONTINUOUSLY);
-                    }
+                    }}
 
-                    clip.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                clip.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }).start();
-    }
+        }
+    }).start();
+}
 
     private void stopAlarm(Clip sound) {
+        System.out.println("stoppp");
+        System.out.println(select);
         if (select == "Math Questions") {
             mathProblem = new DisplayMathScreen(width, height, fps);
             if (mathProblem.mathInstance.complete) {

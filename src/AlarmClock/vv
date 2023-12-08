@@ -1,0 +1,43 @@
+
+    private void startAlarm() {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Clip clip = AudioSystem.getClip();
+                    AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+                            getClass().getResourceAsStream("sound/alarm.wav"));
+                    clip.open(inputStream);
+                    AlertCount = AlertCount + 1;
+                    if (AlertCount <= 1) {
+                        LocalTime currentTime = LocalTime.now();
+                        if (currentTime.getHour() == alarmTime.getHour() &&
+                                    currentTime.getMinute() == alarmTime.getMinute()) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                int option = JOptionPane.showOptionDialog(
+                                        frame,
+                                        "Wake Up!",
+                                        "Alarm",
+                                        JOptionPane.DEFAULT_OPTION,
+                                        JOptionPane.INFORMATION_MESSAGE,
+                                        null,
+                                        new Object[]{"Play to Stop!"},
+                                        "Play to Stop!");
+
+                                if (option == 0) {
+                                    stopAlarm(clip);
+                                    System.out.println("option");
+                                }
+                            }
+                        });
+
+                        clip.loop(Clip.LOOP_CONTINUOUSLY);
+                    }}
+
+                    clip.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
