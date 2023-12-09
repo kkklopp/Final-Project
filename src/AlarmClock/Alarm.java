@@ -17,12 +17,10 @@ public class Alarm {
     private int height;
     private int fps;
     private int hammerGoal;
-
     private int highScore;
     private JFrame frame;
     private JPanel panel;
     private JButton setButton;
-
     private JButton onOffButton;
     private JTextField hourField;
     private JTextField minuteField;
@@ -30,16 +28,11 @@ public class Alarm {
     private boolean alarmOn = false;
     private LocalTime alarmTime;
     public String select;
-    private LocalTime currentTime;
     public int AlertCount = 0;
-    boolean gameComplete = false;
     static DisplayMathScreen mathProblem;
-
     static DisplayGameScreen gameScreen;
-
     static DisplayWordleScreen wordleScreen;
     Clip clip;
-
     private JComboBox<String> selectComboBox;
 
 
@@ -162,44 +155,51 @@ public class Alarm {
     private void startAlarm() {
         new Thread(new Runnable() {
             public void run() {
-            try {
-                Clip clip = AudioSystem.getClip();
-                AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-                        getClass().getResourceAsStream("sound/alarm.wav"));
-                clip.open(inputStream);
-                if (AlertCount <= 1) {
-                    LocalTime currentTime = LocalTime.now();
-                    if (currentTime.getHour() == alarmTime.getHour() &&
-                            currentTime.getMinute() == alarmTime.getMinute()) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                                                       public void run() {
-                                                           int option = JOptionPane.showOptionDialog(
-                                                                   panel,
-                                                                   "Wake Up!",
-                                                                   "Alarm",
-                                                                   JOptionPane.DEFAULT_OPTION,
-                                                                   JOptionPane.INFORMATION_MESSAGE,
-                                                                   null,
-                                                                   new Object[]{"Play to Stop!"},
-                                                                   "Play to Stop!");
+                try {
+                    Clip clip = AudioSystem.getClip();
+                    AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+                            getClass().getResourceAsStream("sound/alarm.wav"));
+                    clip.open(inputStream);
 
-                                                           if (option == 0) {
-                                                               stopAlarm(clip);
-                                                               System.out.println("option");
-                                                           }
-                                                       }
-                                                   });
+                    while (true) {
+                        LocalTime currentTime = LocalTime.now();
+                        if (currentTime.getHour() == alarmTime.getHour() &&
+                                currentTime.getMinute() == alarmTime.getMinute()) {
+                            SwingUtilities.invokeLater(new Runnable() {
+                                public void run() {
+                                    int option = JOptionPane.showOptionDialog(
+                                            panel,
+                                            "Wake Up!",
+                                            "Alarm",
+                                            JOptionPane.DEFAULT_OPTION,
+                                            JOptionPane.INFORMATION_MESSAGE,
+                                            null,
+                                            new Object[]{"Play to Stop!"},
+                                            "Play to Stop!");
 
-                        clip.loop(Clip.LOOP_CONTINUOUSLY);
-                    }}
+                                    if (option == 0) {
+                                        stopAlarm(clip);
+                                        System.out.println("option");
+                                    }
+                                }
+                            });
 
-                clip.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+                            clip.loop(Clip.LOOP_CONTINUOUSLY);
+                            break;  // Exit the loop once the alarm starts ringing
+                        }
+
+                        // Sleep for a short duration before checking again
+                        Thread.sleep(1000);  // Sleep for 1 second (adjust as needed)
+                    }
+
+                    clip.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }
-    }).start();
-}
+        }).start();
+    }
+
 
     private void stopAlarm(Clip sound) {
         System.out.println("stoppp");
